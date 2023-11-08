@@ -1,13 +1,9 @@
-import {
-  IonApp,
-  IonRouterOutlet,
-  IonSplitPane,
-  setupIonicReact,
-} from "@ionic/react";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
 import Menu from "./components/Menu";
 import Page from "./pages/Page";
+import Main from "./pages/Main";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -34,15 +30,11 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <Menu />
-        <IonRouterOutlet id="main">
-          <Route path="/" exact={true}>
-            <Redirect to="/page/Inbox" />
-          </Route>
+        <IonRouterOutlet>
           <Route
-            path="/page/:name"
+            path="/home/:filter"
             exact={true}
-            render={(props) => <Page {...props} />}
+            render={(props) => <Main {...props} />}
           ></Route>
         </IonRouterOutlet>
       </IonReactRouter>
