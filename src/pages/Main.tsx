@@ -2,6 +2,9 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
+  IonItem,
+  IonLabel,
+  IonList,
   IonMenuButton,
   IonPage,
   IonTitle,
@@ -10,12 +13,9 @@ import {
 import { RouteComponentProps } from "react-router";
 import ExploreContainer from "../components/ExploreContainer";
 import SideMenu from "../components/SideMenu";
-import Menu from "../components/Menu";
 import "./Main.css";
 
 const Main: React.FC<RouteComponentProps> = ({ match }) => {
-  console.log(`match:`);
-  console.log(match);
   const { filter } = match.params;
 
   return (
@@ -37,7 +37,7 @@ const Main: React.FC<RouteComponentProps> = ({ match }) => {
               <IonTitle size="large">{filter}</IonTitle>
             </IonToolbar>
           </IonHeader>
-          <ExploreContainer name={filter} />
+          <ExploreContainer filter={filter} />
         </IonContent>
       </IonPage>
     </>

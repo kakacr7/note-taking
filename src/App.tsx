@@ -36,6 +36,9 @@ const App: React.FC = () => {
             exact={true}
             render={(props) => <Main {...props} />}
           ></Route>
+          <Route>
+            <Redirect to="/home/all" />
+          </Route>
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

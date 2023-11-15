@@ -9,6 +9,7 @@ import {
   IonMenuToggle,
 } from "@ionic/react";
 import { trash, pricetag, reader } from "ionicons/icons";
+import NotesModel from "../models/NotesModel";
 import "./SideMenu.css";
 
 type MenuItem = {
@@ -22,7 +23,7 @@ const menuItems: MenuItem[] = [
   { title: "Trash", url: "/home/trash", icon: trash },
 ];
 
-const tags = ["Family", "Friends", "Notes", "Work", "Travel", "Reminders"];
+const tags = NotesModel.getTags();
 
 const SideMenu: React.FC = () => {
   return (
@@ -49,7 +50,7 @@ const SideMenu: React.FC = () => {
           {tags.map((tag, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>
-                <IonItem lines="none" routerLink={"/home/vinicius"}>
+                <IonItem lines="none" routerLink={`/home/${tag}`}>
                   <IonIcon slot="start" aria-hidden="true" icon={pricetag} />
                   <IonLabel>{tag}</IonLabel>
                 </IonItem>
