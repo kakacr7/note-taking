@@ -1,22 +1,27 @@
 import {
   IonButtons,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
-  IonItem,
-  IonLabel,
-  IonList,
+  IonIcon,
   IonMenuButton,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { RouteComponentProps } from "react-router";
-import ExploreContainer from "../components/ExploreContainer";
+import NotesContainter from "../components/NotesContainer";
+import { create } from "ionicons/icons";
 import SideMenu from "../components/SideMenu";
 import "./Main.css";
 
-const Main: React.FC<RouteComponentProps> = ({ match }) => {
-  const { filter } = match.params;
+type MainProps = {
+  filter: string;
+};
+
+const Main: React.FC<MainProps> = ({ filter }) => {
+  const title =
+    filter === "all" ? "All Notes" : filter === "trash" ? "Trash" : filter;
 
   return (
     <>
@@ -27,17 +32,16 @@ const Main: React.FC<RouteComponentProps> = ({ match }) => {
             <IonButtons slot="start">
               <IonMenuButton />
             </IonButtons>
-            <IonTitle>{filter}</IonTitle>
+            <IonTitle>{title}</IonTitle>
           </IonToolbar>
         </IonHeader>
-
         <IonContent fullscreen>
-          <IonHeader collapse="condense">
-            <IonToolbar>
-              <IonTitle size="large">{filter}</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <ExploreContainer filter={filter} />
+          <NotesContainter filter={filter} />
+          <IonFab slot="fixed" horizontal="end" vertical="bottom">
+            <IonFabButton routerDirection="none" routerLink="/note/1">
+              <IonIcon icon={create}></IonIcon>
+            </IonFabButton>
+          </IonFab>
         </IonContent>
       </IonPage>
     </>

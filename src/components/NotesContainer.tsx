@@ -1,12 +1,12 @@
-import "./ExploreContainer.css";
+import "./NotesContainer.css";
 import NotesModel from "../models/NotesModel";
 import { IonItem, IonLabel, IonList } from "@ionic/react";
 
-interface ContainerProps {
+interface NotesContainerProps {
   filter: string;
 }
 
-const ExploreContainer: React.FC<ContainerProps> = ({ filter }) => {
+const NotesContainter: React.FC<NotesContainerProps> = ({ filter }) => {
   const notes =
     filter === "all"
       ? NotesModel.getNotes()
@@ -18,7 +18,12 @@ const ExploreContainer: React.FC<ContainerProps> = ({ filter }) => {
     <IonList>
       {notes.map((note, index) => {
         return (
-          <IonItem key={index} routerLink={`/note/${note.id}`}>
+          <IonItem
+            key={index}
+            routerDirection="none"
+            detail={false}
+            routerLink={`/note/${note.id}`}
+          >
             <IonLabel>{note.title}</IonLabel>
           </IonItem>
         );
@@ -27,4 +32,4 @@ const ExploreContainer: React.FC<ContainerProps> = ({ filter }) => {
   );
 };
 
-export default ExploreContainer;
+export default NotesContainter;

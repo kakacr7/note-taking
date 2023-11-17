@@ -50,7 +50,11 @@ const SideMenu: React.FC = () => {
           {tags.map((tag, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>
-                <IonItem lines="none" routerLink={`/home/${tag}`}>
+                <IonItem
+                  lines="none"
+                  routerDirection="none"
+                  routerLink={`/home/${tag}`}
+                >
                   <IonIcon slot="start" aria-hidden="true" icon={pricetag} />
                   <IonLabel>{tag}</IonLabel>
                 </IonItem>
