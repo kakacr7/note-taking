@@ -1,4 +1,9 @@
-import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
+import {
+  IonApp,
+  IonRouterOutlet,
+  setupIonicReact,
+  useIonRouter,
+} from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
 import Main from "./pages/Main";
@@ -30,25 +35,18 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route
-            path="/home/:filter"
-            exact={true}
-            render={(props) => {
-              const filter =
-                props.match.params.filter || props.match.url.split("/").at(-1);
-              return <Main filter={filter} />;
-            }}
-          ></Route>
+          <Route path="/home" render={(props) => <Main {...props} />}></Route>
           <Route
             path="/note/:id"
             exact={true}
             render={(props) => {
-              const { id } =
-                props.match.params || props.match.url.split("/").at(-1);
+              const id = props.match.url.split("/").at(-1) || "new";
               return <Note id={id} />;
             }}
           ></Route>
-          <Route render={() => <Redirect to={"/home/all"} />}></Route>
+          <Route>
+            <Redirect to="/home" />
+          </Route>
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

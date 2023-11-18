@@ -1,13 +1,18 @@
-import "./NotesContainer.css";
+import "./TrashContainer.css";
 import NotesModel from "../models/NotesModel";
 import { IonItem, IonLabel, IonList } from "@ionic/react";
 
 interface NotesContainerProps {
-  tag?: string;
+  filter: string;
 }
 
-const NotesContainter: React.FC<NotesContainerProps> = ({ tag }) => {
-  const notes = tag ? NotesModel.getNotesByTag(tag) : NotesModel.getNotes();
+const NotesContainter: React.FC<NotesContainerProps> = ({ filter }) => {
+  const notes =
+    filter === "all"
+      ? NotesModel.getNotes()
+      : filter === "trash"
+      ? NotesModel.getTrash()
+      : NotesModel.getNotesByTag(filter);
 
   return (
     <IonList>

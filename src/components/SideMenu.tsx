@@ -19,7 +19,7 @@ type MenuItem = {
 };
 
 const menuItems: MenuItem[] = [
-  { title: "All notes", url: "/home/all", icon: reader },
+  { title: "All notes", url: "/home", icon: reader },
   { title: "Trash", url: "/home/trash", icon: trash },
 ];
 
@@ -53,7 +53,7 @@ const SideMenu: React.FC = () => {
                 <IonItem
                   lines="none"
                   routerDirection="none"
-                  routerLink={`/home/${tag}`}
+                  routerLink={`/home/filter/${tag}`}
                 >
                   <IonIcon slot="start" aria-hidden="true" icon={pricetag} />
                   <IonLabel>{tag}</IonLabel>

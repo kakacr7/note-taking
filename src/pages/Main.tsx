@@ -1,48 +1,38 @@
-import {
-  IonButtons,
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonHeader,
-  IonIcon,
-  IonMenuButton,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from "@ionic/react";
-import NotesContainter from "../components/NotesContainer";
-import { create } from "ionicons/icons";
+import { IonPage, IonRouterOutlet } from "@ionic/react";
 import SideMenu from "../components/SideMenu";
 import "./Main.css";
+import { Redirect, Route, RouteComponentProps } from "react-router";
+import MainContainer from "../components/MainContainer";
 
-type MainProps = {
-  filter: string;
-};
-
-const Main: React.FC<MainProps> = ({ filter }) => {
-  const title =
-    filter === "all" ? "All Notes" : filter === "trash" ? "Trash" : filter;
-
+const Main: React.FC<RouteComponentProps> = ({ match }) => {
+  const t = (props, name) => {
+    console.log(props.match);
+    return <h1>{name}</h1>;
+  };
   return (
     <>
       <SideMenu />
-      <IonPage id="main">
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonMenuButton />
-            </IonButtons>
-            <IonTitle>{title}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent fullscreen>
-          <NotesContainter filter={filter} />
-          <IonFab slot="fixed" horizontal="end" vertical="bottom">
-            <IonFabButton routerDirection="none" routerLink="/note/1">
-              <IonIcon icon={create}></IonIcon>
-            </IonFabButton>
-          </IonFab>
-        </IonContent>
+      <IonPage>
+        <IonRouterOutlet id="main">
+          <Route
+            path={match.url}
+            exact={true}
+            render={() => <MainContainer />}
+          />
+          <Route
+            path={`${match.url}/trash`}
+            render={(props) => t(props, "trash")}
+          />
+          <Route
+            path={`${match.url}/filter/:tag`}
+            exact={true}
+            render={(props) => {
+              const { tag } = props.match.params;
+              return <MainContainer tag={tag} />;
+            }}
+          />
+          <Route render={() => <Redirect to={match.url} />} />
+        </IonRouterOutlet>
       </IonPage>
     </>
   );
