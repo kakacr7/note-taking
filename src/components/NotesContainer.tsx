@@ -1,6 +1,6 @@
-import "./NotesContainer.css";
 import NotesModel from "../models/NotesModel";
-import { IonItem, IonLabel, IonList } from "@ionic/react";
+import { IonItem, IonList } from "@ionic/react";
+import "./NotesContainer.css";
 
 interface NotesContainerProps {
   tag?: string;
@@ -18,8 +18,13 @@ const NotesContainter: React.FC<NotesContainerProps> = ({ tag }) => {
             routerDirection="none"
             detail={false}
             routerLink={`/note/${note.id}`}
+            lines="none"
+            className="ion-margin-bottom"
           >
-            <IonLabel>{note.title}</IonLabel>
+            <div className="note-item">
+              <h6>{note.title}</h6>
+              <p className="note-content">{note.content}</p>
+            </div>
           </IonItem>
         );
       })}

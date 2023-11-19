@@ -31,7 +31,6 @@ const Main: React.FC<RouteComponentProps> = ({ match }) => {
               return <MainContainer tag={tag} />;
             }}
           />
-          <Route render={() => <Redirect to={match.url} />} />
         </IonRouterOutlet>
       </IonPage>
     </>

@@ -1,9 +1,4 @@
-import {
-  IonApp,
-  IonRouterOutlet,
-  setupIonicReact,
-  useIonRouter,
-} from "@ionic/react";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
 import Main from "./pages/Main";
@@ -44,9 +39,7 @@ const App: React.FC = () => {
               return <Note id={id} />;
             }}
           ></Route>
-          <Route>
-            <Redirect to="/home" />
-          </Route>
+          <Route exact={true} path="/" render={() => <Redirect to="/home" />} />
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

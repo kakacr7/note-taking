@@ -18,7 +18,7 @@ interface MainContainerProps {
 }
 
 const MainContainer: React.FC<MainContainerProps> = ({ tag }) => {
-  const title = tag ? `Notes tagged with ${tag}` : "All Notes";
+  const title = tag || "All Notes";
 
   return (
     <>
@@ -33,7 +33,7 @@ const MainContainer: React.FC<MainContainerProps> = ({ tag }) => {
       <IonContent fullscreen>
         <NotesContainter tag={tag} />
         <IonFab slot="fixed" horizontal="end" vertical="bottom">
-          <IonFabButton routerDirection="none" routerLink="/note/1">
+          <IonFabButton routerDirection="forward" routerLink="/note/new">
             <IonIcon icon={create}></IonIcon>
           </IonFabButton>
         </IonFab>
