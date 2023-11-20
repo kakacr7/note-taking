@@ -1,5 +1,5 @@
 import NotesModel from "../models/NotesModel";
-import { IonItem, IonList } from "@ionic/react";
+import { IonItem, IonList, useIonRouter } from "@ionic/react";
 import "./NotesContainer.css";
 
 interface NotesContainerProps {

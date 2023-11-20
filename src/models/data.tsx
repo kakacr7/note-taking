@@ -3,7 +3,7 @@ export type Note = {
   title: string;
   content: string;
   date: string;
-  tags: string[];
+  tags: Set<string>;
   trash: boolean;
 };
 
@@ -13,7 +13,7 @@ export let notes: Note[] = [
     title: "Note 1",
     content: "This is the content of note 1",
     date: "2021-01-01",
-    tags: ["tag1", "tag2"],
+    tags: new Set(["tag1", "tag2"]),
     trash: false,
   },
   {
@@ -22,7 +22,7 @@ export let notes: Note[] = [
     content:
       "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
     date: "2021-01-02",
-    tags: ["tag1", "tag3"],
+    tags: new Set(["tag1", "tag3"]),
     trash: false,
   },
   {
@@ -37,7 +37,7 @@ export let notes: Note[] = [
     Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.
     `,
     date: "2021-01-03",
-    tags: ["tag2", "tag3"],
+    tags: new Set(["tag2", "tag3"]),
     trash: false,
   },
   {
@@ -45,9 +45,9 @@ export let notes: Note[] = [
     title: "Note 4",
     content: "This is the content of note 4",
     date: "2021-01-04",
-    tags: ["tag1", "tag2"],
+    tags: new Set(["tag1", "tag2"]),
     trash: true,
   },
 ];
 
-export let tags: string[] = ["tag1", "tag2", "tag3"];
+export let tags: Set<string> = new Set(["tag1", "tag2", "tag3"]);

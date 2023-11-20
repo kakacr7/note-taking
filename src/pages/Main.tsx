@@ -24,6 +24,10 @@ const Main: React.FC<RouteComponentProps> = ({ match }) => {
             render={(props) => t(props, "trash")}
           />
           <Route
+            path={`${match.url}/select`}
+            render={(props) => t(props, "select")}
+          />
+          <Route
             path={`${match.url}/filter/:tag`}
             exact={true}
             render={(props) => {

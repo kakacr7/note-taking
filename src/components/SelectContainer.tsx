@@ -12,7 +12,7 @@ import {
 } from "@ionic/react";
 import { create } from "ionicons/icons";
 import NotesContainter from "./NotesContainer";
-import "./MainContainer.css";
+import "./SelectContainer.css";
 
 interface MainContainerProps {
   tag?: string;

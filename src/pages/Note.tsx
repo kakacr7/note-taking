@@ -11,6 +11,7 @@ import {
   IonPage,
   IonTextarea,
   IonToolbar,
+  useIonAlert,
   useIonLoading,
   useIonRouter,
 } from "@ionic/react";
@@ -26,51 +27,69 @@ interface NoteProps {
 
 type NoteState = {
   note?: Note;
+  tags: Set<string>;
   scroll: boolean;
 };
 
 const NotePage: React.FC<NoteProps> = ({ id }) => {
-  let note = id === "new" ? NotesModel.newNote() : NotesModel.getNote(id);
-  const [state, setState] = useState<NoteState>({ note, scroll: false });
+  const note = id === "new" ? NotesModel.newNote() : NotesModel.getNote(id);
+  const tags = new Set(note?.tags);
+  const [state, setState] = useState<NoteState>({ note, tags, scroll: false });
   const [present, dismiss] = useIonLoading();
+  const [presentAlert] = useIonAlert();
   const router = useIonRouter();
 
   const saveNote = async () => {
     await present("Saving note...");
     const title = document.getElementById("note-title") as HTMLInputElement;
     const content = document.getElementById("note-content") as HTMLInputElement;
-    if (!note) {
-      note = NotesModel.newNote();
+    if (!state.note) {
+      state.note = NotesModel.newNote();
     }
-    note.title = title.value;
-    note.content = content.value;
-    NotesModel.saveNote(note);
+    state.note.title = title.value;
+    state.note.content = content.value;
+    state.note.tags = state.tags;
+    await NotesModel.saveNote(state.note);
     await dismiss();
   };
 
   const deleteNote = async () => {
-    await present("Deleting note...");
-    if (note) {
-      NotesModel.deleteNote(note);
-    }
-    await dismiss();
-    router.push("/home", "back");
+    presentAlert({
+      header: "Delete note?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "OK",
+          role: "confirm",
+          handler: async () => {
+            await present("Deleting note...");
+            if (note) {
+              await NotesModel.deleteNote(note);
+            }
+            await dismiss();
+            router.push("/home", "back");
+          },
+        },
+      ],
+    });
   };
 
   const addTag = async () => {
     const tagInput = document.getElementById("tag-input") as HTMLInputElement;
-    if (tagInput.value && note?.tags.indexOf(tagInput.value) === -1) {
-      note?.tags.push(tagInput.value);
-      setState({ note: { ...note }, scroll: true });
-    }
+    const { value } = tagInput;
     tagInput.value = "";
+    if (value && !state.tags.has(value)) {
+      state.tags.add(value);
+      setState({ ...state, tags: new Set(state.tags), scroll: true });
+    }
   };
 
   const removeTag = async (tag: string) => {
-    if (note) {
-      note.tags = note.tags.filter((t) => t !== tag);
-      setState({ note: { ...note }, scroll: false });
-    }
+    state.tags.delete(tag);
+    setState({ ...state, tags: new Set(state.tags), scroll: false });
   };
 
   useEffect(() => {
@@ -122,7 +141,7 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
         </IonContent>
         <div id="footer-container">
           <div id="resize">
-            {note?.tags.map((tag, index) => (
+            {[...state.tags].map((tag, index) => (
               <IonChip key={index}>
                 <IonLabel>{tag}</IonLabel>
                 <IonIcon

@@ -112,3 +112,12 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+ion-item {
+  cursor: pointer;
+}
+
+.delete-tag-icon {
+  padding: 3px;
+  border-radius: 50%;
+}

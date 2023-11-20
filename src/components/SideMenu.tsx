@@ -7,8 +7,10 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
+  useIonAlert,
+  useIonRouter,
 } from "@ionic/react";
-import { trash, pricetag, reader } from "ionicons/icons";
+import { trash, pricetag, reader, closeOutline } from "ionicons/icons";
 import NotesModel from "../models/NotesModel";
 import "./SideMenu.css";
 
@@ -26,6 +28,42 @@ const menuItems: MenuItem[] = [
 const tags = NotesModel.getTags();
 
 const SideMenu: React.FC = () => {
+  const router = useIonRouter();
+  const [presentAlert] = useIonAlert();
+
+  const handleDeleteTag = (tag: string) => {
+    presentAlert({
+      header: `Delete tag "${tag}"?`,
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "OK",
+          role: "confirm",
+          handler: async () => {
+            await NotesModel.deleteTag(tag);
+            router.push("/home", "none");
+          },
+        },
+      ],
+    });
+  };
+
+  const handleItemClick = (
+    e: React.MouseEvent<HTMLIonItemElement, MouseEvent>,
+    url: string,
+    tag: string,
+  ) => {
+    if (e.target.classList.contains("delete-tag-icon")) {
+      handleDeleteTag(tag);
+      return;
+    }
+
+    router.push(url, "forward");
+  };
+
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
@@ -47,16 +85,24 @@ const SideMenu: React.FC = () => {
         </IonList>
         <IonList id="labels-list">
           <IonListHeader>Tags</IonListHeader>
-          {tags.map((tag, index) => {
+          {[...tags].map((tag, index) => {
             return (
               <IonMenuToggle key={index} autoHide={false}>
                 <IonItem
                   lines="none"
                   routerDirection="none"
-                  routerLink={`/home/filter/${tag}`}
+                  onClick={(e) => {
+                    handleItemClick(e, `/home/filter/${tag}`, tag);
+                  }}
                 >
                   <IonIcon slot="start" aria-hidden="true" icon={pricetag} />
                   <IonLabel>{tag}</IonLabel>
+                  <IonIcon
+                    slot="end"
+                    aria-hidden="true"
+                    icon={closeOutline}
+                    className="delete-tag-icon"
+                  />
                 </IonItem>
               </IonMenuToggle>
             );
