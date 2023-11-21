@@ -12,7 +12,8 @@ import {
   IonMenuButton,
   IonTitle,
   IonToolbar,
-  useIonRouter,
+  useIonAlert,
+  useIonLoading,
 } from "@ionic/react";
 import { create, trash } from "ionicons/icons";
 import "./TrashContainer.css";
@@ -20,8 +21,34 @@ import NotesModel from "../models/NotesModel";
 import { useState } from "react";
 
 const TrashContainer: React.FC = () => {
+  console.log("Rendering TrashContainer");
   const notes = NotesModel.getTrash();
   const [state, setState] = useState(notes);
+
+  const [present, dismiss] = useIonLoading();
+  const [presentAlert] = useIonAlert();
+
+  const clearTrash = async () => {
+    presentAlert({
+      header: "Delete all notes?",
+      buttons: [
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
+        {
+          text: "OK",
+          role: "confirm",
+          handler: async () => {
+            await present("Deleting notes...");
+            NotesModel.clearTrash();
+            await dismiss();
+            setState([...NotesModel.getTrash()]);
+          },
+        },
+      ],
+    });
+  };
 
   return (
     <>
@@ -38,13 +65,7 @@ const TrashContainer: React.FC = () => {
             slot="end"
           />
           <IonButtons slot="end">
-            <IonButton
-              onClick={() => {
-                NotesModel.clearTrash();
-                console.log("clear trash");
-                setState([...NotesModel.getTrash()]);
-              }}
-            >
+            <IonButton onClick={clearTrash}>
               <IonIcon icon={trash} />
             </IonButton>
           </IonButtons>

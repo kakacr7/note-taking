@@ -20,6 +20,7 @@ interface MainContainerProps {
 
 const MainContainer: React.FC<MainContainerProps> = ({ tag }) => {
   const title = tag || "All Notes";
+  console.log("Rendering MainContainer");
 
   return (
     <>

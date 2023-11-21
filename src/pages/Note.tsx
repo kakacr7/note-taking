@@ -26,30 +26,27 @@ interface NoteProps {
 }
 
 type NoteState = {
-  note: Note;
   currNote: Note;
   scroll: boolean;
   deleted: boolean;
 };
 
 const NotePage: React.FC<NoteProps> = ({ id }) => {
-  // window.location.reload();
   const note = NotesModel.getNote(id) || NotesModel.newNote();
   const [state, setState] = useState<NoteState>({
-    note,
     currNote: { ...note, tags: new Set(note.tags) },
     scroll: false,
     deleted: false,
   });
-  console.log("Rendering NotePage");
-  if (note.id !== state.note.id && id !== "new") {
+
+  if (id !== "new" && note.id !== state.currNote.id) {
     setState({
-      note,
       currNote: { ...note, tags: new Set(note.tags) },
       scroll: false,
       deleted: false,
     });
   }
+
   const [present, dismiss] = useIonLoading();
   const [presentAlert] = useIonAlert();
   const router = useIonRouter();
@@ -80,6 +77,7 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
           handler: async () => {
             await present("Deleting note...");
             await NotesModel.deleteNote(state.currNote);
+            state.currNote.trash = true;
             await dismiss();
             setState({ ...state, deleted: true });
           },
@@ -93,13 +91,12 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
     const title = document.getElementById("note-title") as HTMLInputElement;
     const content = document.getElementById("note-content") as HTMLInputElement;
 
-    state.currNote.title = title.value;
-    state.currNote.content = content.value;
-
     const { value } = tagInput;
     tagInput.value = "";
 
     if (value && !state.currNote.tags.has(value)) {
+      state.currNote.title = title.value;
+      state.currNote.content = content.value;
       state.currNote.tags.add(value);
       setState({ ...state, scroll: true });
     }
