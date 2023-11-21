@@ -30,12 +30,6 @@ const MainContainer: React.FC<MainContainerProps> = ({ tag }) => {
             <IonMenuButton />
           </IonButtons>
           <IonTitle>{title}</IonTitle>
-          <IonCheckbox
-            onIonChange={(e) => {
-              console.log(e.detail.checked);
-            }}
-            slot="end"
-          />
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
