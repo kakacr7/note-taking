@@ -1,8 +1,9 @@
 import { IonPage, IonRouterOutlet } from "@ionic/react";
 import SideMenu from "../components/SideMenu";
 import "./Main.css";
-import { Redirect, Route, RouteComponentProps } from "react-router";
+import { Route, RouteComponentProps } from "react-router";
 import MainContainer from "../components/MainContainer";
+import TrashContainer from "../components/TrashContainer";
 
 const Main: React.FC<RouteComponentProps> = ({ match }) => {
   const t = (props, name) => {
@@ -19,10 +20,7 @@ const Main: React.FC<RouteComponentProps> = ({ match }) => {
             exact={true}
             render={() => <MainContainer />}
           />
-          <Route
-            path={`${match.url}/trash`}
-            render={(props) => t(props, "trash")}
-          />
+          <Route path={`${match.url}/trash`} component={TrashContainer} />
           <Route
             path={`${match.url}/select`}
             render={(props) => t(props, "select")}

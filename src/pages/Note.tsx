@@ -26,15 +26,30 @@ interface NoteProps {
 }
 
 type NoteState = {
-  note?: Note;
-  tags: Set<string>;
+  note: Note;
+  currNote: Note;
   scroll: boolean;
+  deleted: boolean;
 };
 
 const NotePage: React.FC<NoteProps> = ({ id }) => {
-  const note = id === "new" ? NotesModel.newNote() : NotesModel.getNote(id);
-  const tags = new Set(note?.tags);
-  const [state, setState] = useState<NoteState>({ note, tags, scroll: false });
+  // window.location.reload();
+  const note = NotesModel.getNote(id) || NotesModel.newNote();
+  const [state, setState] = useState<NoteState>({
+    note,
+    currNote: { ...note, tags: new Set(note.tags) },
+    scroll: false,
+    deleted: false,
+  });
+  console.log("Rendering NotePage");
+  if (note.id !== state.note.id && id !== "new") {
+    setState({
+      note,
+      currNote: { ...note, tags: new Set(note.tags) },
+      scroll: false,
+      deleted: false,
+    });
+  }
   const [present, dismiss] = useIonLoading();
   const [presentAlert] = useIonAlert();
   const router = useIonRouter();
@@ -43,14 +58,12 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
     await present("Saving note...");
     const title = document.getElementById("note-title") as HTMLInputElement;
     const content = document.getElementById("note-content") as HTMLInputElement;
-    if (!state.note) {
-      state.note = NotesModel.newNote();
-    }
-    state.note.title = title.value;
-    state.note.content = content.value;
-    state.note.tags = state.tags;
-    await NotesModel.saveNote(state.note);
+
+    state.currNote.title = title.value;
+    state.currNote.content = content.value;
+    await NotesModel.saveNote(state.currNote);
     await dismiss();
+    setState({ ...state });
   };
 
   const deleteNote = async () => {
@@ -66,11 +79,9 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
           role: "confirm",
           handler: async () => {
             await present("Deleting note...");
-            if (note) {
-              await NotesModel.deleteNote(note);
-            }
+            await NotesModel.deleteNote(state.currNote);
             await dismiss();
-            router.push("/home", "back");
+            setState({ ...state, deleted: true });
           },
         },
       ],
@@ -79,17 +90,24 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
 
   const addTag = async () => {
     const tagInput = document.getElementById("tag-input") as HTMLInputElement;
+    const title = document.getElementById("note-title") as HTMLInputElement;
+    const content = document.getElementById("note-content") as HTMLInputElement;
+
+    state.currNote.title = title.value;
+    state.currNote.content = content.value;
+
     const { value } = tagInput;
     tagInput.value = "";
-    if (value && !state.tags.has(value)) {
-      state.tags.add(value);
-      setState({ ...state, tags: new Set(state.tags), scroll: true });
+
+    if (value && !state.currNote.tags.has(value)) {
+      state.currNote.tags.add(value);
+      setState({ ...state, scroll: true });
     }
   };
 
   const removeTag = async (tag: string) => {
-    state.tags.delete(tag);
-    setState({ ...state, tags: new Set(state.tags), scroll: false });
+    state.currNote.tags.delete(tag);
+    setState({ ...state, scroll: false });
   };
 
   useEffect(() => {
@@ -98,6 +116,9 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
         "footer-container",
       ) as HTMLDivElement;
       footer.scrollLeft = footer.scrollWidth;
+    }
+    if (state.deleted) {
+      router.push("/home", "none");
     }
   }, [state]);
 
@@ -126,7 +147,7 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
             <IonInput
               id="note-title"
               placeholder="Title"
-              value={note?.title}
+              value={state.currNote.title}
             ></IonInput>
           </IonItem>
           <IonItem lines="none">
@@ -134,14 +155,14 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
               autoGrow={true}
               class="custom"
               placeholder="description"
-              value={note?.content}
+              value={state.currNote.content}
               id="note-content"
             ></IonTextarea>
           </IonItem>
         </IonContent>
         <div id="footer-container">
           <div id="resize">
-            {[...state.tags].map((tag, index) => (
+            {[...state.currNote.tags].map((tag, index) => (
               <IonChip key={index}>
                 <IonLabel>{tag}</IonLabel>
                 <IonIcon

@@ -2,6 +2,7 @@ import { Note, notes, tags } from "./data";
 
 const NotesModel = {
   getNotes: (): Note[] => notes.filter((note) => !note.trash),
+  getAllNotes: (): Note[] => notes,
   getTags: (): Set<string> => tags,
   getNote: (id: string): Note | undefined =>
     notes.find((note) => note.id === id),
@@ -9,7 +10,7 @@ const NotesModel = {
     notes.filter((note) => !note.trash && note.tags.has(tag)),
   getTrash: (): Note[] => notes.filter((note) => note.trash),
   newNote: (): Note => {
-    const id = notes.length.toString();
+    const id = crypto.randomUUID();
     return {
       id,
       title: "New Note",
@@ -40,6 +41,28 @@ const NotesModel = {
   deleteTag: (tag: string): void => {
     tags.delete(tag);
     notes.forEach((note) => note.tags.delete(tag));
+  },
+  restoreNote: (note: Note): void => {
+    const index = notes.findIndex((n) => n.id === note.id);
+    if (index !== -1) {
+      notes[index].trash = false;
+    }
+  },
+  excludeNote: (note: Note): void => {
+    const index = notes.findIndex((n) => n.id === note.id);
+    if (index !== -1) {
+      notes.splice(index, 1);
+    }
+  },
+  clearTrash: (): void => {
+    let i = 0;
+    while (i < notes.length) {
+      if (notes[i].trash) {
+        notes.splice(i, 1);
+      } else {
+        i++;
+      }
+    }
   },
 };
 

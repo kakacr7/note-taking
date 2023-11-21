@@ -22,3 +22,14 @@
 #container a {
   text-decoration: none;
 }
+
+.note-item {
+  max-height: 80px;
+  overflow: hidden;
+}
+
+.note-content {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+}

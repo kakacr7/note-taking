@@ -1,35 +1,83 @@
+import {
+  IonButton,
+  IonButtons,
+  IonCheckbox,
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonList,
+  IonMenuButton,
+  IonTitle,
+  IonToolbar,
+  useIonRouter,
+} from "@ionic/react";
+import { create, trash } from "ionicons/icons";
 import "./TrashContainer.css";
 import NotesModel from "../models/NotesModel";
-import { IonItem, IonLabel, IonList } from "@ionic/react";
+import { useState } from "react";
 
-interface NotesContainerProps {
-  filter: string;
-}
-
-const NotesContainter: React.FC<NotesContainerProps> = ({ filter }) => {
-  const notes =
-    filter === "all"
-      ? NotesModel.getNotes()
-      : filter === "trash"
-      ? NotesModel.getTrash()
-      : NotesModel.getNotesByTag(filter);
+const TrashContainer: React.FC = () => {
+  const notes = NotesModel.getTrash();
+  const [state, setState] = useState(notes);
 
   return (
-    <IonList>
-      {notes.map((note, index) => {
-        return (
-          <IonItem
-            key={index}
-            routerDirection="none"
-            detail={false}
-            routerLink={`/note/${note.id}`}
-          >
-            <IonLabel>{note.title}</IonLabel>
-          </IonItem>
-        );
-      })}
-    </IonList>
+    <>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonMenuButton />
+          </IonButtons>
+          <IonTitle>{"Trash"}</IonTitle>
+          <IonCheckbox
+            onIonChange={(e) => {
+              console.log(e.detail.checked);
+            }}
+            slot="end"
+          />
+          <IonButtons slot="end">
+            <IonButton
+              onClick={() => {
+                NotesModel.clearTrash();
+                console.log("clear trash");
+                setState([...NotesModel.getTrash()]);
+              }}
+            >
+              <IonIcon icon={trash} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent fullscreen>
+        <IonList>
+          {state.map((note, index) => {
+            return (
+              <IonItem
+                key={index}
+                routerDirection="none"
+                detail={false}
+                routerLink={`/trash/${note.id}`}
+                lines="none"
+                className="ion-margin-bottom"
+              >
+                <div className="note-item">
+                  <h6>{note.title}</h6>
+                  <p className="note-content">{note.content}</p>
+                </div>
+              </IonItem>
+            );
+          })}
+        </IonList>
+        <IonFab slot="fixed" horizontal="end" vertical="bottom">
+          <IonFabButton routerDirection="forward" routerLink="/note/new">
+            <IonIcon icon={create}></IonIcon>
+          </IonFabButton>
+        </IonFab>
+      </IonContent>
+    </>
   );
 };
 
-export default NotesContainter;
+export default TrashContainer;

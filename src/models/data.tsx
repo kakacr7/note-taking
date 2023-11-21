@@ -9,15 +9,15 @@ export type Note = {
 
 export let notes: Note[] = [
   {
-    id: "1",
+    id: crypto.randomUUID(),
     title: "Note 1",
     content: "This is the content of note 1",
     date: "2021-01-01",
     tags: new Set(["tag1", "tag2"]),
-    trash: false,
+    trash: true,
   },
   {
-    id: "2",
+    id: crypto.randomUUID(),
     title: "Note 2",
     content:
       "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.",
@@ -26,7 +26,7 @@ export let notes: Note[] = [
     trash: false,
   },
   {
-    id: "3",
+    id: crypto.randomUUID(),
     title: "Note 3",
     content: `
     Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.
@@ -41,7 +41,7 @@ export let notes: Note[] = [
     trash: false,
   },
   {
-    id: "4",
+    id: crypto.randomUUID(),
     title: "Note 4",
     content: "This is the content of note 4",
     date: "2021-01-04",
