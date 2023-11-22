@@ -17,16 +17,22 @@ import {
 } from "@ionic/react";
 import { create, trash } from "ionicons/icons";
 import "./TrashContainer.css";
-import NotesModel from "../models/NotesModel";
-import { useState } from "react";
+import NotesModel, { Note } from "../models/NotesModel";
+import { useState, useEffect } from "react";
 
 const TrashContainer: React.FC = () => {
-  console.log("Rendering TrashContainer");
-  const notes = NotesModel.getTrash();
-  const [state, setState] = useState(notes);
+  const [state, setState] = useState<Note[]>([]);
 
   const [present, dismiss] = useIonLoading();
   const [presentAlert] = useIonAlert();
+
+  useEffect(() => {
+    const getNotes = async () => {
+      const notes = await NotesModel.getTrash();
+      setState([...notes]);
+    };
+    getNotes();
+  }, []);
 
   const clearTrash = async () => {
     presentAlert({
@@ -43,7 +49,8 @@ const TrashContainer: React.FC = () => {
             await present("Deleting notes...");
             NotesModel.clearTrash();
             await dismiss();
-            setState([...NotesModel.getTrash()]);
+            const notes = await NotesModel.getTrash();
+            setState([...notes]);
           },
         },
       ],
@@ -58,12 +65,6 @@ const TrashContainer: React.FC = () => {
             <IonMenuButton />
           </IonButtons>
           <IonTitle>{"Trash"}</IonTitle>
-          <IonCheckbox
-            onIonChange={(e) => {
-              console.log(e.detail.checked);
-            }}
-            slot="end"
-          />
           <IonButtons slot="end">
             <IonButton onClick={clearTrash}>
               <IonIcon icon={trash} />

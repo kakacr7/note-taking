@@ -2,7 +2,7 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
 import Main from "./pages/Main";
-import Note from "./pages/Note";
+import NotePage from "./pages/NotePage";
 import TrashNoteContainer from "./components/TrashNoteContainer";
 
 /* Core CSS required for Ionic components to work properly */
@@ -40,11 +40,9 @@ const App: React.FC = () => {
             }}
           />
           <Route
-            path="/note/:id"
-            exact={true}
+            path="/note"
             render={(props) => {
-              const id = props.match.url.split("/").at(-1) || "new";
-              return <Note id={id} />;
+              return <NotePage {...props} />;
             }}
           ></Route>
           <Route exact={true} path="/" render={() => <Redirect to="/home" />} />

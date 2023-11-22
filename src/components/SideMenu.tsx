@@ -13,6 +13,7 @@ import {
 import { trash, pricetag, reader, closeOutline } from "ionicons/icons";
 import NotesModel from "../models/NotesModel";
 import "./SideMenu.css";
+import { useEffect, useState } from "react";
 
 type MenuItem = {
   title: string;
@@ -25,11 +26,22 @@ const menuItems: MenuItem[] = [
   { title: "Trash", url: "/home/trash", icon: trash },
 ];
 
-const tags = NotesModel.getTags();
-
 const SideMenu: React.FC = () => {
   const router = useIonRouter();
   const [presentAlert] = useIonAlert();
+  const [tags, setTags] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const getTags = async () => {
+      const newTags = await NotesModel.getTags();
+      const eqSet = (xs: Set<string>, ys: Set<string>) =>
+        xs.size === ys.size && [...xs].every((x) => ys.has(x));
+      if (!eqSet(newTags, tags)) {
+        setTags(new Set(newTags));
+      }
+    };
+    getTags();
+  });
 
   const handleDeleteTag = (tag: string) => {
     presentAlert({
@@ -44,7 +56,7 @@ const SideMenu: React.FC = () => {
           role: "confirm",
           handler: async () => {
             await NotesModel.deleteTag(tag);
-            router.push("/home", "none");
+            setTags(new Set([...tags].filter((t) => t !== tag)));
           },
         },
       ],

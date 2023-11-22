@@ -9,7 +9,6 @@ import {
   IonItem,
   IonLabel,
   IonPage,
-  IonPopover,
   IonTextarea,
   IonToolbar,
   useIonAlert,
@@ -18,8 +17,9 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { arrowBack, ellipsisVertical } from "ionicons/icons";
-import NotesModel from "../models/NotesModel";
+import NotesModel, { Note } from "../models/NotesModel";
 import "./TrashContainer.css";
+import { useEffect, useState } from "react";
 
 interface NoteProps {
   id: string;
@@ -27,10 +27,18 @@ interface NoteProps {
 
 const TrashNoteContainer: React.FC<NoteProps> = ({ id }) => {
   const router = useIonRouter();
-  const note = NotesModel.getNote(id);
+  const [note, setNote] = useState<Note>();
 
   const [present, dismiss] = useIonLoading();
   const [presentAlert, dismissAlert] = useIonAlert();
+
+  useEffect(() => {
+    const getNote = async () => {
+      const note = await NotesModel.getNoteById(id);
+      setNote(note);
+    };
+    getNote();
+  }, []);
 
   const handleDelete = async () => {
     dismissAlert();

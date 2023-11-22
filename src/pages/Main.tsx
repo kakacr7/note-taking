@@ -6,10 +6,6 @@ import MainContainer from "../components/MainContainer";
 import TrashContainer from "../components/TrashContainer";
 
 const Main: React.FC<RouteComponentProps> = ({ match }) => {
-  const t = (props, name) => {
-    console.log(props.match);
-    return <h1>{name}</h1>;
-  };
   return (
     <>
       <SideMenu />
@@ -21,10 +17,6 @@ const Main: React.FC<RouteComponentProps> = ({ match }) => {
             render={() => <MainContainer />}
           />
           <Route path={`${match.url}/trash`} component={TrashContainer} />
-          <Route
-            path={`${match.url}/select`}
-            render={(props) => t(props, "select")}
-          />
           <Route
             path={`${match.url}/filter/:tag`}
             exact={true}
