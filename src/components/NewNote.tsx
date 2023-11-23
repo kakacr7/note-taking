@@ -65,7 +65,7 @@ const NotePage: React.FC = () => {
 
   const deleteNote = async () => {
     presentAlert({
-      header: "Delete note?",
+      header: "Move to trash?",
       buttons: [
         {
           text: "Cancel",
@@ -75,7 +75,7 @@ const NotePage: React.FC = () => {
           text: "OK",
           role: "confirm",
           handler: async () => {
-            await present("Deleting note...");
+            await present("Moving to trash...");
             await dismiss();
             setState({
               currNote: NotesModel.newNote(),
@@ -117,7 +117,7 @@ const NotePage: React.FC = () => {
     state.currNote.title = title.value;
     state.currNote.content = content.value;
     state.currNote.tags = state.currNote.tags.filter((t) => t !== tag);
-    setState({ ...state, scroll: false, id: undefined, deleted: false });
+    setState({ ...state, scroll: true, id: undefined, deleted: false });
   };
 
   useEffect(() => {

@@ -66,7 +66,7 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
 
   const deleteNote = async () => {
     presentAlert({
-      header: "Delete note?",
+      header: "Move to trash?",
       buttons: [
         {
           text: "Cancel",
@@ -79,7 +79,7 @@ const NotePage: React.FC<NoteProps> = ({ id }) => {
             if (!state.currNote) {
               return;
             }
-            await present("Deleting note...");
+            await present("Move to trash...");
             await NotesModel.deleteNote(state.currNote);
             await dismiss();
             setState({
